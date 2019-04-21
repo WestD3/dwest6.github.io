@@ -1,30 +1,59 @@
 import csv
+import sys
 
-# a file in the current directory
-FILENAME = "movies.csv"
+FILENAME = "movies_test.csv"
 
-def write_movies(movies):
-    with open(FILENAME, "w", newline="") as file:
-        writer = csv.writer(file)
-        writer.writerows(movies)   
+def exit_program():
+    print("Terminating program.")
+    sys.exit()
 
 def read_movies():
-    movies = []
-    with open(FILENAME, newline="") as file:
-        reader = csv.reader(file)
-        for row in reader:
-            movies.append(row)
-    return movies
+    try:
+        movies = []
+        with open(FILENAME, newline="") as file:
+            reader = csv.reader(file)
+            for row in reader:
+                movies.append(row)
+        return movies
+    except FileNotFoundError as e:
+        #print("Could not find " + FILENAME + " file.")
+        #exit_program()
+        return movies
+    except Exception as e:
+        print(type(e), e)
+        exit_program()
+
+def write_movies(movies):
+    try:
+        with open(FILENAME, "w", newline="") as file:
+            #raise OSError("OSError")
+            writer = csv.writer(file)
+            writer.writerows(movies)
+    except Exception as e:
+        print(type(e), e)
+        exit_program()
+    except OSError as e:
+        print (type(e), e)
+        sys.exit()
 
 def list_movies(movies):
-    for i in range(len(movies)):
+    for i in range(0, len(movies)):
         movie = movies[i]
         print(str(i+1) + ". " + movie[0] + " (" + movie[1] + ")")
     print()
-
+    
 def add_movie(movies):
-    name = input("Name: ")
-    year = input("Year: ")
+    while True:
+        try:
+            name = input("Name: ")
+            year = input("Year: ")
+        except ValueError:
+            print("Invalid value. Please try again.")
+            continue
+        if int(year) <= 0:
+            print("The year has to be greater than 0. Please try again.")
+        else:
+            break
     movie = []
     movie.append(name)
     movie.append(year)
@@ -33,11 +62,21 @@ def add_movie(movies):
     print(name + " was added.\n")
 
 def delete_movie(movies):
-    index = int(input("Number: "))   
-    movie = movies.pop(index - 1)
+    while True:
+        try:
+            number = int(input("Number: "))
+        except ValueError:
+            print("Invalid integer. Please try again.")
+            continue
+        if number < 1 or number > len(movies):
+            print("There is no movie with that number. " +
+                  "Please try again.")
+        else:
+            break
+    movie = movies.pop(number - 1)
     write_movies(movies)
     print(movie[0] + " was deleted.\n")
-        
+
 def display_menu():
     print("The Movie List program")
     print()
@@ -46,20 +85,20 @@ def display_menu():
     print("add -  Add a movie")
     print("del -  Delete a movie")
     print("exit - Exit program")
-    print()
+    print()    
 
 def main():
     display_menu()
     movies = read_movies()
     while True:        
         command = input("Command: ")
-        if command.lower() == "list":
-            list_movies(movies)     
-        elif command.lower() == "add":
+        if command == "list":
+            list_movies(movies)
+        elif command == "add":
             add_movie(movies)
-        elif command.lower() == "del":
-            delete_movie(movies)       
-        elif command.lower() == "exit":
+        elif command == "del":
+            delete_movie(movies)
+        elif command == "exit":
             break
         else:
             print("Not a valid command. Please try again.\n")
