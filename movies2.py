@@ -1,7 +1,7 @@
 import csv
 import sys
 
-FILENAME = "movies.csv"
+FILENAME = "movies_test.csv"
 
 def exit_program():
     print("Terminating program.")
@@ -16,8 +16,9 @@ def read_movies():
                 movies.append(row)
         return movies
     except FileNotFoundError as e:
-        print("Could not find " + FILENAME + " file.")
-        exit_program()
+        #print("Could not find " + FILENAME + " file.")
+        #exit_program()
+        return movies
     except Exception as e:
         print(type(e), e)
         exit_program()
@@ -25,11 +26,15 @@ def read_movies():
 def write_movies(movies):
     try:
         with open(FILENAME, "w", newline="") as file:
+            #raise OSError("OSError")
             writer = csv.writer(file)
             writer.writerows(movies)
     except Exception as e:
         print(type(e), e)
         exit_program()
+    except OSError as e:
+        print (type(e), e)
+        sys.exit()
 
 def list_movies(movies):
     for i in range(0, len(movies)):
@@ -38,8 +43,17 @@ def list_movies(movies):
     print()
     
 def add_movie(movies):
-    name = input("Name: ")
-    year = input("Year: ")
+    while True:
+        try:
+            name = input("Name: ")
+            year = input("Year: ")
+        except ValueError:
+            print("Invalid value. Please try again.")
+            continue
+        if int(year) <= 0:
+            print("The year has to be greater than 0. Please try again.")
+        else:
+            break
     movie = []
     movie.append(name)
     movie.append(year)
