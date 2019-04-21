@@ -25,15 +25,11 @@ def read_movies():
 def write_movies(movies):
     try:
         with open(FILENAME, "w", newline="") as file:
-            raise OSError("OSError")
             writer = csv.writer(file)
             writer.writerows(movies)
     except Exception as e:
         print(type(e), e)
         exit_program()
-    except OSError as e:
-        print (type(e), e)
-        sys.exit()
 
 def list_movies(movies):
     for i in range(0, len(movies)):
@@ -42,6 +38,8 @@ def list_movies(movies):
     print()
     
 def add_movie(movies):
+    name = input("Name: ")
+    year = input("Year: ")
     movie = []
     movie.append(name)
     movie.append(year)
@@ -54,7 +52,7 @@ def delete_movie(movies):
         try:
             number = int(input("Number: "))
         except ValueError:
-            print("Invalid number. Please try again.")
+            print("Invalid integer. Please try again.")
             continue
         if number < 1 or number > len(movies):
             print("There is no movie with that number. " +
