@@ -13,12 +13,7 @@ def list(movie_list):
         print("There are no movies in the list.\n")
         return
     else:
-        i = 1
-        for movie in movie_list:
-            row = movie
-            print(str(i) + ". " + row[0] + " (" + str(row[1]) + ")")
-            i += 1
-        print()
+        print(movie_list)
 
 def add(movie_list):
     name = input("Name: ")
@@ -26,21 +21,32 @@ def add(movie_list):
     movie = []
     movie.append(name)
     movie.append(year)
-    movie_list.append(movie)
+    popcorn = {"name": name,
+              "year": year}
+    movie_list[name] = popcorn
     print(movie[0] + " was added.\n")
     
 def delete(movie_list):
-    number = int(input("Number: "))
-    if number < 1 or number > len(movie_list):
-        print("Invalid movie number.\n")
-    else:
-        movie = movie_list.pop(number-1)
-        print(movie[0] + " was deleted.\n")
+    name = input("Name: ")
+    if name in movie_list:
+        del movie_list[name]
+        print(name  + " is removed from the movie list\n")
+    else: 
+        print(name + " does not exist from the movie list\n")
         
 def main():
-    movie_list = [["Monty Python and the Holy Grail", 1975],
-                  ["On the Waterfront", 1954],
-                  ["Cat on a Hot Tin Roof", 1958]]
+    movie_list = {
+        "Monty Python and the Holy Grail":
+            {"name": "Monty Python and the Holy Grail",
+             "year": "1975"},
+        "On the Waterfront":
+            {"name": "On the Waterfront",
+             "year": "1954"},
+        "Cat on a Hot Tin Roof":
+            {"name": "Cat on a Hot Tin Roof",
+             "year": "1958"}
+    }
+    
     
     display_menu()
     while True:        
